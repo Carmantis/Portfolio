@@ -290,6 +290,7 @@ Here are some tools I use, available through these links.
       <li>NumPy</li>
       <li>Scikit-learn</li>
       <li>TensorFlow</li>
+      <li>Pytorch</li>
     </ul>
   </div>
 </figure>
