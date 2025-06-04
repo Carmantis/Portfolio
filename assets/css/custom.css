@@ -1,121 +1,108 @@
-/* Custom CSS */
+/* ==============================
+   Custom CSS for Portfolio
+   ============================== */
 
-html {
-    scroll-behavior: smooth;
-}
-
-/* General Styles */
+/* YLEISET */
+html { scroll-behavior: smooth; }
 body {
     font-family: Arial, sans-serif;
-    color: #faf8f8;
+    color: #0e0e0e;
     margin: 0;
     padding: 0;
-    background: linear-gradient(180deg, #3B1C32, #1A1A1D);
+    background: linear-gradient(180deg, rgba(43,43,43,0.5), #0c0c0c);
 }
 
-main {
-    margin-top: 180px;
-    margin-bottom: 110px;
-    max-width: 800px;
-    padding: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: #33152b;
-    color: #F6DBD1;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    overflow-y: auto;
-}
-
-/* Header Styles */
+/* HEADER */
 .site-header {
     position: fixed;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
-    max-width: 800px;
+    width: 800px;
+    max-width: 100vw;
     margin: 0 auto;
     padding: 20px;
-    background-color: rgba(114, 4, 85, 0.5);
+    background-color: rgba(43, 43, 43, 0.5);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
     z-index: 1000;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    body {
-        font-size: 14px;
-    }
-
-    .site-header {
-        width: 90%;
-        padding: 10px;
-    }
-
-    .logo {
-        width: 60px;
-        height: auto;
-    }
-
-    .profile-image {
-        width: 40px;
-        height: 40px;
-        margin: 0;
-    }
-
-    .header-content {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-    }
-
-    main {
-        padding: 10px;
-    }
-
-    .footer {
-        width: 90%;
-        padding: 10px;
-    }
-}
-
-/* Logo and Profile Image */
-.header-content {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.header-right {
+    display: flex;
+    align-items: flex-start;
 }
 
 .logo {
-    width: 150px;
+    width: 50px;
     height: auto;
+    margin-bottom: 2px;
     transition: transform 0.5s ease-in-out;
 }
 
+.header-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 0.03em;
+}
+
 .profile-image {
-    width: 110px;
-    height: 110px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    border: 3px solid #090809;
+    border: 2px solid #0a0a0a;
     object-fit: cover;
 }
 
-/* Footer Styles */
+/* MAIN */
+main,
+.site-main {
+    margin-top: 100px;
+    margin-bottom: 80px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    color: #080808;
+    background: none;
+}
+.site-main {
+    position: relative;
+    background-image: url("/Portfolio/assets/images/helmi.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* FOOTER */
 .footer {
     position: fixed;
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
-    max-width: 800px;
+    width: 800px;
+    max-width: 100vw;
     margin: 0 auto;
-    color: white;
+    color: #fff;
     padding: 20px;
-    background-color: rgba(114, 4, 85, 0.5);
+    background-color: rgba(43, 43, 43, 0.5);
     border-radius: 8px;
     text-align: center;
     font-size: 0.9em;
@@ -129,26 +116,21 @@ main {
     margin: 10px 0 0;
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 14px;
 }
-
 .footer-contacts li {
     display: flex;
     align-items: center;
 }
-
 .footer-contacts a {
-    color: white;
+    color: #fff;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 8px;
     font-weight: bold;
 }
-
-.footer-contacts a:hover {
-    color: #050505;
-}
+.footer-contacts a:hover { color: #050505; }
 
 .icon {
     width: 40px;
@@ -156,48 +138,46 @@ main {
     fill: currentColor;
 }
 
-/* Links and Buttons */
+/* LINKIT JA PAINIKKEET */
 a {
-    color: #C25427;
     text-decoration: none;
     font-weight: bold;
 }
-
-a:hover {
-    color: #E49475;
-}
+a:hover { color: #E49475; }
 
 button {
-    background-color: #B93212;
-    color: #FFFFFF;
+    color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
 }
+button:hover { background-color: #C25427; }
 
-button:hover {
-    background-color: #C25427;
-}
+/* UTILITY-LUOKAT */
+.hidden { display: none; }
+.visible { display: block; }
 
-/* Utility Classes */
-.hidden {
-    display: none;
-}
-
-.visible {
-    display: block;
-}
-
-/* Grid Layout */
+/* GRID LAYOUT */
 .container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
-
 img {
     max-width: 100%;
     height: auto;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    body { font-size: 14px; }
+    .site-header, .footer {
+        width: 98vw;
+        padding: 7px;
+        max-width: 98vw;
+    }
+    .logo, .profile-image { width: 32px; height: 32px; }
+    main, .site-main { padding: 10px; }
 }

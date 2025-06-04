@@ -9,12 +9,11 @@
 </head>
     <body>
         {% include header.html %}
-        <main>
+        <main class="site-main">
             {{ content }}
         </main>
         <footer class="footer">
             <div class="footer-content">
-                <p>&copy; {{ site.time | date: "%Y" }} Heikki Aittokumpu</p>
                 <ul class="footer-contacts">
                     <li>
                         <a href="mailto:aittokumpuh@gmail.com">
@@ -35,6 +34,7 @@
                         </a>
                     </li>
                 </ul>
+                <p>&copy; {{ site.time | date: "%Y" }} Heikki Aittokumpu</p>
             </div>
         </footer>
     </body>
