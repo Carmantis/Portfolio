@@ -300,6 +300,7 @@ Here are some of the projects I've worked on, available via the links below. Som
       <li>MySQL</li>
       <li>SQLite</li>
       <li>DuckDB</li>
+      <li>MariaDB</li>
     </ul>
   </div>
 </figure>
