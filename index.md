@@ -5,9 +5,6 @@ permalink: /
 ---
   
 
-  
-## Welcome to my portfolio
-
 ## About Me
 <a id="about"></a>
 
@@ -16,7 +13,7 @@ I am a second-year student at the University of Kajaani, studying AI and data en
 ## Education
 
 - Kajaani University of Applied Sciences  
-Information and Communication Technology  
+Information and Communication Technology   
 From Data to Artificial Intelligence  
 2023 - present
 
@@ -132,9 +129,7 @@ Here are some of the projects I've worked on, available via the links below. Som
     <span>Machine Learning</span>
   </button>
   <div id="machine-learning-container" style="display: none; margin-top: 20px;">
-    <h1>Project Overview: Data Pipeline & Predictive Modeling with LSTM</h1>
 
-    <!-- Introduction -->
     <h2>Introduction</h2>
     <p>
         This project integrates modern data engineering practices and machine learning 
@@ -265,7 +260,6 @@ Here are some of the projects I've worked on, available via the links below. Som
 ## Tools
 <a id="tools"></a>
 
-Here are some tools I use, available through these links.
 
 <!-- Wakatime -->
 <figure>
@@ -306,6 +300,7 @@ Here are some tools I use, available through these links.
       <li>MySQL</li>
       <li>SQLite</li>
       <li>DuckDB</li>
+      <li>MariaDB</li>
     </ul>
   </div>
 </figure>
