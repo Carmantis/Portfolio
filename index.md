@@ -8,7 +8,7 @@ permalink: /
 ## About Me
 <a id="about"></a>
 
-I am a second-year student at the University of Kajaani, studying AI and data engineering. I am passionate about data and machine learning methods. Currently working on a project that involves data processing and machine learning.
+I am a third-year student at Kajaani University of Applied Sciences, studying AI and data engineering. I am passionate about data and machine learning methods. Currently studying Big Data, Web Development, and Large Language Models.
 
 ## Education
 
@@ -94,6 +94,9 @@ Here are some of the projects I've worked on, available via the links below. Som
 
     <h2>Architecture</h2>
     <p>The database uses DuckDB as a data warehouse. SQL-based dbt models retrieve desired information, with each data model building upon the previous layer.</p>
+
+    <img src="{{ site.baseurl }}/assets/images/pipeline.png" alt="Data Pipeline" style="max-width: 100%; height: auto;">
+    
 
     <h2>Pipeline</h2>
     <p>The pipeline processes train data for specific trains (7, 8, 10) over a specified time period (01.10.2024 - 03.11.2024). This can be adjusted as needed. Data is fetched using Digitraffic API and staged for processing.</p>
