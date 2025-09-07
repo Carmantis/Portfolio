@@ -1,0 +1,129 @@
+## Weather
+<div id="weather-widget" class="weather-card">
+  <div class="weather-header">
+    <span class="weather-location" id="ww-location">Detecting location…</span>
+    <span class="weather-updated" id="ww-updated"></span>
+  </div>
+
+  <div class="weather-main">
+    <div class="weather-temp" id="ww-temp">--°C</div>
+    <div class="weather-icon" id="ww-icon" aria-hidden="true">☁️</div>
+  </div>
+
+  <div class="weather-details">
+    <div><strong>Condition:</strong> <span id="ww-desc">—</span></div>
+    <div><strong>Wind:</strong> <span id="ww-wind">—</span></div>
+    <div><strong>Humidity:</strong> <span id="ww-humidity">—</span></div>
+  </div>
+
+  <form id="ww-manual" class="weather-manual" autocomplete="off">
+    <label for="ww-city">Try another city:</label>
+    <input id="ww-city" name="city" type="text" placeholder="e.g. Helsinki" />
+    <button type="submit">Show</button>
+  </form>
+</div>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  // --- Weather code → emoji + description (Open-Meteo weather_code)
+  const WMAP = {
+    0: ["☀️","Clear sky"], 1: ["🌤️","Mainly clear"], 2: ["⛅","Partly cloudy"], 3: ["☁️","Overcast"],
+    45: ["🌫️","Fog"], 48: ["🌫️","Depositing rime fog"],
+    51: ["🌦️","Drizzle light"], 53: ["🌦️","Drizzle"], 55: ["🌦️","Drizzle heavy"],
+    56: ["🌧️","Freezing drizzle light"], 57: ["🌧️","Freezing drizzle heavy"],
+    61: ["🌧️","Rain light"], 63: ["🌧️","Rain"], 65: ["🌧️","Rain heavy"],
+    66: ["🌧️","Freezing rain light"], 67: ["🌧️","Freezing rain heavy"],
+    71: ["🌨️","Snow fall light"], 73: ["🌨️","Snow fall"], 75: ["🌨️","Snow fall heavy"],
+    77: ["❄️","Snow grains"],
+    80: ["🌧️","Rain showers light"], 81: ["🌧️","Rain showers"], 82: ["🌧️","Rain showers violent"],
+    85: ["🌨️","Snow showers light"], 86: ["🌨️","Snow showers heavy"],
+    95: ["⛈️","Thunderstorm"], 96: ["⛈️","Thunderstorm hail"], 99: ["⛈️","Severe thunderstorm hail"]
+  };
+
+  async function geocodeCity(q) {
+    const url = new URL("https://geocoding-api.open-meteo.com/v1/search");
+    url.searchParams.set("name", q);
+    url.searchParams.set("count", "1");
+    url.searchParams.set("language", "en");
+    const r = await fetch(url);
+    const d = await r.json();
+    if (!d || !d.results || !d.results.length) throw new Error("City not found");
+    const g = d.results[0];
+    return { lat: g.latitude, lon: g.longitude, label: `${g.name}${g.country ? ", "+g.country : ""}` };
+  }
+
+  async function reverseGeocode(lat, lon) {
+    const url = new URL("https://geocoding-api.open-meteo.com/v1/reverse");
+    url.searchParams.set("latitude", lat);
+    url.searchParams.set("longitude", lon);
+    url.searchParams.set("language", "en");
+    const r = await fetch(url);
+    const d = await r.json();
+    const first = d?.results?.[0];
+    if (first?.name) return `${first.name}${first.country ? ", "+first.country : ""}`;
+    return `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+  }
+
+  async function fetchWeather(lat, lon) {
+    const url = new URL("https://api.open-meteo.com/v1/forecast");
+    url.searchParams.set("latitude", lat);
+    url.searchParams.set("longitude", lon);
+    url.searchParams.set("current", "temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m");
+    url.searchParams.set("timezone", "auto");
+    const r = await fetch(url);
+    return await r.json();
+  }
+
+  function renderWeather(label, data) {
+    const c = data.current;
+    const code = c.weather_code;
+    const [emoji, desc] = WMAP[code] || ["❓","Unknown"];
+    $("ww-location").textContent = label;
+    $("ww-temp").textContent = `${Math.round(c.temperature_2m)}°C`;
+    $("ww-icon").textContent = emoji;
+    $("ww-desc").textContent = desc;
+    $("ww-wind").textContent = `${Math.round(c.wind_speed_10m)} m/s`;
+    $("ww-humidity").textContent = `${Math.round(c.relative_humidity_2m)} %`;
+    $("ww-updated").textContent = `Updated: ${new Date().toLocaleTimeString()}`;
+  }
+
+  async function showForLatLon(lat, lon, labelOpt) {
+    $("ww-location").textContent = "Loading…";
+    const label = labelOpt || await reverseGeocode(lat, lon);
+    const data = await fetchWeather(lat, lon);
+    renderWeather(label, data);
+  }
+
+  // Manual city form
+  $("ww-manual").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const q = $("ww-city").value.trim();
+    if (!q) return;
+    try {
+      const {lat, lon, label} = await geocodeCity(q);
+      await showForLatLon(lat, lon, label);
+    } catch (err) {
+      $("ww-location").textContent = "City not found";
+    }
+  });
+
+  // Try browser geolocation; fallback to Tampere
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        await showForLatLon(latitude, longitude);
+      },
+      async () => {
+        const {lat, lon, label} = await geocodeCity("Tampere");
+        await showForLatLon(lat, lon, label);
+      },
+      { timeout: 5000 }
+    );
+  } else {
+    geocodeCity("Tampere").then(({lat, lon, label}) => showForLatLon(lat, lon, label));
+  }
+})();
+</script>
