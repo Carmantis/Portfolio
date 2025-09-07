@@ -1,45 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-baseurl="{{ site.baseurl }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }} | {{ site.title }}</title>
-    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/custom.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/custom.css?v={{ site.time | date: '%s' }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
     <body>
         {% include header.html %}
-        <main class="site-main">
-            <video autoplay muted loop playsinline class="background-video">
-            <source src="{{ site.baseurl }}/assets/images/vid2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-            </video>
-            {{ content }}
-        </main>
-        <footer class="footer">
-            <div class="footer-content">
-                <ul class="footer-contacts">
-                    <li>
-                        <a href="mailto:aittokumpuh@gmail.com">
-                            <img src="{{ site.baseurl }}/assets/icons/email.svg" alt="E-mail" class="icon">
-                            E-mail
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://www.linkedin.com/in/heikki-aittokumpu" target="_blank">
-                            <img src="{{ site.baseurl }}/assets/icons/linkedin.svg" alt="LinkedIn" class="icon">
-                            LinkedIn
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/Carmantis" target="_blank">
-                            <img src="{{ site.baseurl }}/assets/icons/github.svg" alt="Github" class="icon">
-                            Github
-                        </a>
-                    </li>
-                </ul>
-                <p>&copy; {{ site.time | date: "%Y" }} Heikki Aittokumpu</p>
+        <main>
+            <div class="container-wide">
+                {{ content }}
             </div>
-        </footer>
+        </main>
+            <footer class="footer">
+            <div class="footer-inner">
+                <ul class="footer-contacts">
+                <li>
+                    <a href="mailto:aittokumpuh@gmail.com" class="contact" aria-label="E-mail">
+                    <span class="icon-mask"
+                        style="-webkit-mask-image:url('{{ site.baseurl }}/assets/icons/email.svg');mask-image:url('{{ site.baseurl }}/assets/icons/email.svg');"></span>
+                    <span class="contact-label">E-mail</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://www.linkedin.com/in/heikki-aittokumpu" target="_blank" rel="noopener" class="contact" aria-label="LinkedIn">
+                    <span class="icon-mask"
+                        style="-webkit-mask-image:url('{{ site.baseurl }}/assets/icons/linkedin.svg');mask-image:url('{{ site.baseurl }}/assets/icons/linkedin.svg');"></span>
+                    <span class="contact-label">LinkedIn</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/Carmantis" target="_blank" rel="noopener" class="contact" aria-label="GitHub">
+                    <span class="icon-mask"
+                        style="-webkit-mask-image:url('{{ site.baseurl }}/assets/icons/github.svg');mask-image:url('{{ site.baseurl }}/assets/icons/github.svg');"></span>
+                    <span class="contact-label">GitHub</span>
+                    </a>
+                </li>
+                </ul>
+
+                <p class="copyright">© {{ site.time | date: "%Y" }} Heikki Aittokumpu</p>
+            </div>
+            </footer>
     </body>
 </html>

@@ -1,0 +1,34 @@
+<h2>Train Delay Pipeline (Digitraffic)</h2>
+<p>
+  Data pipeline using the Digitraffic API → staged to Bronze/Silver/Gold layers,
+  modeled with <strong>dbt</strong>, stored in <strong>DuckDB</strong>, and visualized in <strong>Evidence</strong>.
+</p>
+
+<img src="{{ site.baseurl }}/assets/images/pipeline.png" alt="Data Pipeline" style="max-width:100%;height:auto;margin:8px 0;">
+
+<h3>Pipeline</h3>
+<p>
+  Example period: 01.10.2024–03.11.2024; trains 7, 8, 10 (configurable).
+  Data fetched via Digitraffic and staged for processing.
+</p>
+
+<h3>Layers</h3>
+<ul>
+  <li><strong>Bronze:</strong> Raw with types & surrogate keys.</li>
+  <li><strong>Silver:</strong> Detailed stop/train/delay tables.</li>
+  <li><strong>Gold:</strong> Final tables for delay analytics & visualization.</li>
+</ul>
+
+<h3>Visualization</h3>
+<p>Weekly average delays (bar) and train-specific trends (line).</p>
+
+<h3>Future</h3>
+<p>Automate selection of period & trains → end-to-end to Evidence.</p>
+
+<h3>Links</h3>
+<ul>
+  <li><a href="https://github.com/Carmantis/VR-Datapipeline" target="_blank" rel="noopener">GitHub Repository</a></li>
+  <li><a href="https://www.digitraffic.fi/rautatieliikenne/" target="_blank" rel="noopener">Digitraffic</a></li>
+  <li><a href="https://docs.evidence.dev/" target="_blank" rel="noopener">Evidence</a></li>
+  <li><a href="https://www.getdbt.com/" target="_blank" rel="noopener">dbt</a></li>
+</ul>
