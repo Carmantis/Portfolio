@@ -71,11 +71,20 @@ permalink: /
     <p>My coding activity, languages, and editors.</p>
   </article>
 
+  <article class="widget-card" tabindex="0" data-modal="modal-logos">
+    <span class="widget-chip">STACK</span><div class="widget-icon">🛰️</div>
+    <h3>Tech Stack (Floating Logos)</h3>
+    <p>Tools & frameworks I work with.</p>
+  </article>
+
   <article class="widget-card" tabindex="0" data-modal="modal-coming-soon">
     <span class="widget-chip">COMING SOON</span><div class="widget-icon">⏳</div>
     <h3>New Project</h3>
     <p>Details about the upcoming project will be available soon.</p>
   </article>
+
+
+
 
 <template id="tpl-weather">
   {% include weather-widget.html %}
@@ -91,6 +100,7 @@ permalink: /
 <template id="tpl-podcast">{% include widget_podcast.html %}</template>
 <template id="tpl-career-video">{% include widget_video.html %}</template>
 <template id="tpl-wakatime">{% include widget_wakatime.html %}</template>
+<template id="tpl-logos">{% include widget_logos.html %}</template>
 <template id="tpl-coming-soon">{% include widget_webapp.html %}</template>
 
 <dialog id="app-modal" class="modal" aria-modal="true">
@@ -112,6 +122,7 @@ permalink: /
     "modal-podcast": { title: "Podcast: Career Deep Dive", tpl: "tpl-podcast" },
     "modal-career-video": { title: "Video: Career video", tpl: "tpl-career-video" },
     "modal-wakatime": { title: "Wakatime Stats", tpl: "tpl-wakatime" },
+    "modal-logos": { title: "Tech Stack (Floating Logos)", tpl: "tpl-logos" },
     "modal-coming-soon": { title: "New Project", tpl: "tpl-coming-soon" },
   };
 

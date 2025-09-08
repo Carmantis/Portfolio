@@ -1,0 +1,215 @@
+<div class="logos-card">
+  <h2>Tech Stack — Floating Logos</h2>
+  <p>Tools & frameworks I use. Hover to slow down; move mouse to attract bubbles.</p>
+  <div class="logos-sky" id="logos-sky" aria-label="Floating technology logos"></div>
+</div>
+
+<script>
+(() => {
+  const sky = document.getElementById("logos-sky");
+  if (!sky || sky.dataset.inited) return;
+  sky.dataset.inited = "1";
+
+  // ----- Settings -----
+  const PADDING    = 8;      
+  const ATTRACTION = 0.05;   
+  const DAMPING    = 0.90;   
+  const FLOAT_MIN  = 6, FLOAT_MAX = 16;           
+  const SPEED_MIN  = 0.0006, SPEED_MAX = 0.0014;  
+
+  // ----- Tools list -----
+  const TOOLS = [
+    { name: "Python", slug: "python", url: "https://www.python.org/" },
+    { name: "PyTorch", slug: "pytorch", url: "https://pytorch.org/" },
+    { name: "TensorFlow", slug: "tensorflow", url: "https://www.tensorflow.org/" },
+    { name: "Keras", slug: "keras", url: "https://keras.io/" },
+    { name: "NumPy", slug: "numpy", url: "https://numpy.org/" },
+    { name: "Pandas", slug: "pandas", url: "https://pandas.pydata.org/" },
+    { name: "Matplotlib", slug: "matplotlib", url: "https://matplotlib.org/" },
+    { name: "Seaborn", slug: "seaborn", url: "https://seaborn.pydata.org/" },
+    { name: "DuckDB", slug: "duckdb", url: "https://duckdb.org/" },
+    { name: "dbt", slug: "dbt", url: "https://www.getdbt.com/" },
+    { name: "Streamlit", slug: "streamlit", url: "https://streamlit.io/" },
+    { name: "Jupyter", slug: "jupyter", url: "https://jupyter.org/" },
+    { name: "OpenCV", slug: "opencv", url: "https://opencv.org/" },
+    { name: "FastAPI", slug: "fastapi", url: "https://fastapi.tiangolo.com/" },
+    { name: "MariaDB", slug: "mariadb", url: "https://mariadb.org/" },
+    { name: "Microsoft Azure", slug: "microsoftazure", url: "https://azure.microsoft.com/" },
+    { name: "Git", slug: "git", url: "https://git-scm.com/" },
+    { name: "GitHub", slug: "github", url: "https://github.com/" },
+    { name: "GitLab", slug: "gitlab", url: "https://gitlab.com/" },
+    { name: "Docker", slug: "docker", url: "https://www.docker.com/" },
+    { name: "Kubernetes", slug: "kubernetes", url: "https://kubernetes.io/" },
+    { name: "Android", slug: "android", url: "https://developer.android.com/" },
+    { name: "Kotlin", slug: "kotlin", url: "https://kotlinlang.org/" },
+    { name: "Java", slug: "java", url: "https://www.java.com/" },
+    { name: "WakaTime", slug: "wakatime", url: "https://wakatime.com/" },
+  ];
+
+  const LOCAL_ICONS = {
+    "Java": "{{ site.baseurl }}/assets/icons/java.svg",
+    "Microsoft Azure": "{{ site.baseurl }}/assets/icons/azure.svg", 
+    "Matplotlib": "{{ site.baseurl }}/assets/icons/matplotlib.svg",
+    "Seaborn": "{{ site.baseurl }}/assets/icons/seaborn.svg"
+  }
+
+const ICON_OVERRIDES = {
+  "Matplotlib": ["matplotlib"],
+  "Seaborn": ["seaborn"],
+  "Microsoft Azure": ["microsoftazure","azure"],
+  "Java": ["java"],
+  "torchvision": ["pytorch"],
+  "EfficientNet": ["tensorflow"],
+  "Segment Anything": ["meta","facebook"]
+};
+
+
+function setIcon(img, tool){
+  if (LOCAL_ICONS[tool.name]) {
+    img.src = LOCAL_ICONS[tool.name];
+    img.dataset.mode = "local";
+    return;
+  }
+
+  const candidates = [tool.slug, ...(ICON_OVERRIDES[tool.name] || [])].filter(Boolean);
+  let i = 0;
+  img.onerror = () => {
+    i++;
+    if (i < candidates.length){
+      img.src = `https://cdn.simpleicons.org/${encodeURIComponent(candidates[i])}`;
+    } else {
+      img.onerror = null;
+      img.remove();
+      const span = document.createElement("span");
+      span.className = "logo-fallback";
+      const initials = tool.name.split(/\s+/).map(s => s[0]).slice(0,3).join("").toUpperCase();
+      span.textContent = initials || tool.name;
+      img.closest("a").appendChild(span);
+    }
+  };
+
+  img.src = `https://cdn.simpleicons.org/${encodeURIComponent(candidates[i])}`;
+}
+
+  // ----- Measure -----
+  function measure() {
+    const r = sky.getBoundingClientRect();
+    return { W: r.width, H: r.height };
+  }
+
+  function rand(min, max){ return min + Math.random() * (max - min); }
+
+  function init() {
+    let { W, H } = measure();
+    if (W < 10 || H < 10) { requestAnimationFrame(init); return; }
+
+    const bubbles = [];
+
+    TOOLS.forEach(t => {
+      const a = document.createElement("a");
+      a.className = "logo-bubble";
+      a.href = t.url; a.target = "_blank"; a.rel = "noopener";
+      a.title = t.name;
+
+      const img = document.createElement("img");
+      img.alt = t.name;
+      img.decoding = "async";
+      img.loading = "lazy";
+      setIcon(img, t);
+
+      const label = document.createElement("span");
+      label.className = "logo-label";
+      label.textContent = t.name;
+
+      a.append(img, label);
+
+      const sizePx = 36 + Math.round(Math.random() * 36); // 36–72
+      const rpx    = sizePx / 2;
+
+      const minX = PADDING + rpx;
+      const maxX = W - PADDING - rpx;
+      const minY = PADDING + rpx;
+      const maxY = H - PADDING - rpx;
+
+      const baseX = rand(minX, maxX);
+      const baseY = rand(minY, maxY);
+
+      a.style.setProperty("--size", `${sizePx}px`);
+      a.style.left = `${baseX}px`;
+      a.style.top  = `${baseY}px`;
+
+      sky.appendChild(a);
+
+      bubbles.push({
+        el:a, baseX, baseY, r:rpx,
+        vx:0, vy:0,
+        ampX: rand(FLOAT_MIN, FLOAT_MAX),
+        ampY: rand(FLOAT_MIN, FLOAT_MAX),
+        speed: rand(SPEED_MIN, SPEED_MAX),
+        phX: Math.random() * Math.PI * 2,
+        phY: Math.random() * Math.PI * 2
+      });
+    });
+
+    // Mouse Gravity (px)
+    const mouse = { x: W/2, y: H/2, inside:false };
+    sky.addEventListener("pointerenter", () => { mouse.inside = true;  sky.classList.add("hover"); });
+    sky.addEventListener("pointerleave", () => { mouse.inside = false; sky.classList.remove("hover"); });
+    sky.addEventListener("pointermove", (e) => {
+      const r = sky.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+      sky.style.setProperty("--tiltX", (((mouse.y / H) - 0.5) * -4).toFixed(2));
+      sky.style.setProperty("--tiltY", (((mouse.x / W) - 0.5) *  4).toFixed(2));
+    });
+
+    window.addEventListener("resize", () => { const m = measure(); W = m.W; H = m.H; });
+
+    // Animation
+    let last = performance.now();
+    function frame(now){
+      const dt = Math.min(32, now - last); last = now;
+      const scalar = dt / 16; // ~60fps normalization
+
+      for (const b of bubbles){
+        // free fall
+        const fx = Math.sin(now * b.speed + b.phX) * b.ampX;
+        const fy = Math.cos(now * b.speed + b.phY) * b.ampY;
+
+        // attraction towards mouse
+        if (mouse.inside){
+          const tx = mouse.x - b.baseX;
+          const ty = mouse.y - b.baseY;
+          b.vx = (b.vx + tx * ATTRACTION * scalar) * Math.pow(DAMPING, scalar);
+          b.vy = (b.vy + ty * ATTRACTION * scalar) * Math.pow(DAMPING, scalar);
+        } else {
+          b.vx *= Math.pow(DAMPING, scalar);
+          b.vy *= Math.pow(DAMPING, scalar);
+        }
+
+        // offsets
+        let ox = b.vx + fx;
+        let oy = b.vy + fy;
+
+        // boarders
+        const minX = (PADDING + b.r) - b.baseX;
+        const maxX = (W - PADDING - b.r) - b.baseX;
+        const minY = (PADDING + b.r) - b.baseY;
+        const maxY = (H - PADDING - b.r) - b.baseY;
+
+        if (ox < minX) { ox = minX; b.vx = ox - fx; }
+        if (ox > maxX) { ox = maxX; b.vx = ox - fx; }
+        if (oy < minY) { oy = minY; b.vy = oy - fy; }
+        if (oy > maxY) { oy = maxY; b.vy = oy - fy; }
+
+        b.el.style.transform = `translate(calc(-50% + ${ox}px), calc(-50% + ${oy}px))`;
+      }
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  init();
+})();
+</script>
