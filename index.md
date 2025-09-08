@@ -65,6 +65,12 @@ permalink: /
     <p>Short AI-generated video about changing careers.</p>
   </article>
 
+  <article class="widget-card" tabindex="0" data-modal="modal-wakatime">
+    <span class="widget-chip">STATS</span><div class="widget-icon">⏱️</div>
+    <h3>Wakatime Stats</h3>
+    <p>My coding activity, languages, and editors.</p>
+  </article>
+
   <article class="widget-card" tabindex="0" data-modal="modal-coming-soon">
     <span class="widget-chip">COMING SOON</span><div class="widget-icon">⏳</div>
     <h3>New Project</h3>
@@ -84,6 +90,7 @@ permalink: /
 <template id="tpl-image-recognition">{% include widget_deeplearn.html %}</template>
 <template id="tpl-podcast">{% include widget_podcast.html %}</template>
 <template id="tpl-career-video">{% include widget_video.html %}</template>
+<template id="tpl-wakatime">{% include widget_wakatime.html %}</template>
 <template id="tpl-coming-soon">{% include widget_webapp.html %}</template>
 
 <dialog id="app-modal" class="modal" aria-modal="true">
@@ -104,6 +111,7 @@ permalink: /
     "modal-image-recognition": { title: "Image Recognition (Neural Networks)", tpl: "tpl-image-recognition" },
     "modal-podcast": { title: "Podcast: Career Deep Dive", tpl: "tpl-podcast" },
     "modal-career-video": { title: "Video: Career video", tpl: "tpl-career-video" },
+    "modal-wakatime": { title: "Wakatime Stats", tpl: "tpl-wakatime" },
     "modal-coming-soon": { title: "New Project", tpl: "tpl-coming-soon" },
   };
 
