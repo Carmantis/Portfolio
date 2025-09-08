@@ -7,6 +7,31 @@
    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
    ============================== */
 
+/* Global mobile safety net */
+* { box-sizing: border-box; }
+html, body { width:100%; max-width:100%; overflow-x:hidden; }
+
+/* Media elements */
+img, svg, video, canvas, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Text overflow handling */
+.intro-text, .widget-card p, .modal-body { overflow-wrap:anywhere; word-break:break-word; }
+
+@media (max-width: 480px){
+  main { padding: 76px 12px 120px; } /* aiemmin 96px 24px 130px */
+  .section-heading { margin: 28px 0 22px; }
+}
+
+@supports (padding: max(0px)){
+  .site-header{ padding-top: max(10px, env(safe-area-inset-top)); }
+  .footer{ padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
+
 /* ---------- Theme tokens ---------- */
 :root{
   --bg:#0b0c0e;
@@ -47,7 +72,7 @@ img{ max-width:100%; height:auto; }
 }
 .header-inner{
   /* Constrains content within the viewport edges */
-  width:min(1200px, 96vw);
+  width:min(1200px, 96%);
   margin:0 auto;
   padding:0 16px;
   display:grid;
@@ -234,7 +259,7 @@ img{ max-width:100%; height:auto; }
   pointer-events:none;
 }
 .footer-inner{
-  width:min(1200px, 96vw);
+  width:min(1200px, 96%);
   margin:0 auto;
   padding:0 16px;
   display:grid;
@@ -423,7 +448,9 @@ button:hover{ filter:brightness(1.08); }
 .modal{
   border:1px solid rgba(255,255,255,0.08);
   border-radius:16px; padding:0;
-  width:min(900px, 92vw);
+  width:min(900px, 92%);
+  max-width: 900px;
+  overflow: hidden;
   background:linear-gradient(180deg, #0f1115, #0c0e12);
   color:var(--text);
   box-shadow:0 24px 80px rgba(0,0,0,0.6), var(--ring);
@@ -533,6 +560,16 @@ button:hover{ filter:brightness(1.08); }
 }
 
 /* ==================================
+   Wakatime widget
+   ================================== */
+.wakatime-card embed {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* ==================================
    Video widget
    ================================== */
 .video-widget video{
@@ -633,6 +670,7 @@ button:hover{ filter:brightness(1.08); }
 
 /* ========== Floating Logos ========== */
 .logos-card{
+  overflow: hidden;
   margin-top: 6px;
   padding:16px;
   border-radius:12px;
@@ -642,6 +680,7 @@ button:hover{ filter:brightness(1.08); }
 }
 
 .logos-sky{
+  overflow: hidden;
   position: relative;
   height: min(56vh, 520px);
   min-height: 340px;
