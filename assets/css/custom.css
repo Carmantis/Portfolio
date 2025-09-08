@@ -7,6 +7,31 @@
    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
    ============================== */
 
+/* Global mobile safety net */
+* { box-sizing: border-box; }
+html, body { width:100%; max-width:100%; overflow-x:hidden; }
+
+/* Media elements */
+img, svg, video, canvas, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Text overflow handling */
+.intro-text, .widget-card p, .modal-body { overflow-wrap:anywhere; word-break:break-word; }
+
+@media (max-width: 480px){
+  main { padding: 76px 12px 120px; } /* aiemmin 96px 24px 130px */
+  .section-heading { margin: 28px 0 22px; }
+}
+
+@supports (padding: max(0px)){
+  .site-header{ padding-top: max(10px, env(safe-area-inset-top)); }
+  .footer{ padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+
+
 /* ---------- Theme tokens ---------- */
 :root{
   --bg:#0b0c0e;
@@ -47,7 +72,7 @@ img{ max-width:100%; height:auto; }
 }
 .header-inner{
   /* Constrains content within the viewport edges */
-  width:min(1200px, 96vw);
+  width:min(1200px, 96%);
   margin:0 auto;
   padding:0 16px;
   display:grid;
@@ -234,7 +259,7 @@ img{ max-width:100%; height:auto; }
   pointer-events:none;
 }
 .footer-inner{
-  width:min(1200px, 96vw);
+  width:min(1200px, 96%);
   margin:0 auto;
   padding:0 16px;
   display:grid;
@@ -423,7 +448,9 @@ button:hover{ filter:brightness(1.08); }
 .modal{
   border:1px solid rgba(255,255,255,0.08);
   border-radius:16px; padding:0;
-  width:min(900px, 92vw);
+  width:min(900px, 92%);
+  max-width: 900px;
+  overflow: hidden;
   background:linear-gradient(180deg, #0f1115, #0c0e12);
   color:var(--text);
   box-shadow:0 24px 80px rgba(0,0,0,0.6), var(--ring);
@@ -533,6 +560,16 @@ button:hover{ filter:brightness(1.08); }
 }
 
 /* ==================================
+   Wakatime widget
+   ================================== */
+.wakatime-card embed {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+/* ==================================
    Video widget
    ================================== */
 .video-widget video{
@@ -629,4 +666,108 @@ button:hover{ filter:brightness(1.08); }
 /* Pyörimis-animaatio */
 @keyframes wheelSpin{
   to{ transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ========== Floating Logos ========== */
+.logos-card{
+  overflow: hidden;
+  margin-top: 6px;
+  padding:16px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+
+.logos-sky{
+  overflow: hidden;
+  position: relative;
+  height: min(56vh, 520px);
+  min-height: 340px;
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 100% at 10% 0%, rgba(57,255,20,.08), transparent 60%),
+    radial-gradient(120% 100% at 90% 100%, rgba(57,255,20,.06), transparent 60%),
+    linear-gradient(180deg, #0f1115, #0c0e12);
+  box-shadow: inset 0 0 50px rgba(0,0,0,.35), 0 0 24px rgba(57,255,20,.15);
+  transform-style: preserve-3d;
+  perspective: 800px;
+  will-change: transform, filter;
+  transition: filter .3s ease;
+}
+.logos-sky.hover{ filter: saturate(1.08) brightness(1.06); }
+.logos-sky::after{
+  /* pehmeä tähtipöly */
+  content:"";
+  position:absolute; inset:-20%;
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,.35), transparent 60%),
+    radial-gradient(1.5px 1.5px at 60% 70%, rgba(255,255,255,.28), transparent 60%),
+    radial-gradient(2px 2px at 80% 40%, rgba(255,255,255,.25), transparent 60%),
+    radial-gradient(1.5px 1.5px at 35% 85%, rgba(255,255,255,.22), transparent 60%);
+  opacity:.4;
+  pointer-events:none;
+}
+
+.logo-bubble{
+  position:absolute;
+  width:var(--size); height:var(--size);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  border-radius:50%;
+  background:rgba(18,20,26,.65);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 0 8px rgba(57,255,20,.25);
+  transition:box-shadow .2s ease;
+  will-change:transform;
+}
+.logos-sky.hover .logo-bubble{
+  animation-duration: calc(var(--dur) * 1.6); /* hover = hitaampi */
+}
+.logo-bubble:hover{
+  box-shadow:var(--ring);
+  z-index:2;
+}
+
+.logo-bubble img{
+  width: 60%; height: 60%;
+  margin-bottom:4px;
+  display: block; object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(57,255,20,.35));
+}
+
+.logo-label{
+  font-size:0.65rem;
+  font-weight:600;
+  color:var(--muted);
+  line-height:1.1;
+  text-shadow:0 0 4px rgba(0,0,0,.7);
+  pointer-events:none;
+}
+
+.logo-fallback{
+  font-size: 11px; font-weight: 700; text-align:center;
+  color: var(--accent);
+  padding: 4px 6px;
+}
+
+@keyframes floatY{
+  from { transform: translate(-50%, calc(-50% - var(--drift))) rotate(var(--rot)); }
+  to   { transform: translate(-50%, calc(-50% + var(--drift))) rotate(var(--rot)); }
+}
+@keyframes floatX{
+  from { left: calc(var(--x) - 1%); }
+  to   { left: calc(var(--x) + 1%); }
+}
+@keyframes slowSpin{
+  from { filter: drop-shadow(0 0 6px rgba(57,255,20,.32)); }
+  to   { filter: drop-shadow(0 0 12px rgba(57,255,20,.45)); }
+}
+
+/* Parallax: liike muuttuu muuttujien avulla */
+.logos-sky{
+  transform: perspective(900px)
+             rotateX(calc(var(--tiltX, 0) * 1deg))
+             rotateY(calc(var(--tiltY, 0) * 1deg));
 }
