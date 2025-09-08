@@ -496,13 +496,40 @@ button:hover{ filter:brightness(1.08); }
   display:grid; grid-template-columns: repeat(3, 1fr);
   gap:8px; margin-bottom:12px; font-size:0.95rem;
 }
-.weather-manual{ display:flex; gap:8px; align-items:center; margin-top:8px; }
+.weather-manual label{
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  flex: 0 0 auto;
+}
+
 .weather-manual input{
-  flex:1; padding:8px 10px; border-radius:8px;
+  flex: 1 1 160px;
+  min-width: 0; 
+  padding:8px 10px; 
+  border-radius:8px;
   border:1px solid rgba(255,255,255,0.15);
   background:#1a1d23; color:#F6DBD1;
 }
-.weather-manual button{ padding:8px 12px; border-radius:8px; }
+.weather-manual button{ 
+  padding:8px 12px; 
+  border-radius:8px;
+  flex: 0 0 auto; 
+}
+@media (max-width: 360px){
+  .weather-manual{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .weather-manual label{
+    align-self: flex-start;
+    margin-bottom: 4px;
+  }
+  .weather-manual input,
+  .weather-manual button{
+    width: 100%;
+  }
+}
 
 /* ==================================
    Intro section + headings
@@ -568,7 +595,6 @@ button:hover{ filter:brightness(1.08); }
   display: block;
 }
 
-
 /* ==================================
    Video widget
    ================================== */
@@ -590,17 +616,15 @@ button:hover{ filter:brightness(1.08); }
 /* Coming Soon: animated wagon wheel behind the card */
 .widget-card[data-modal="modal-coming-soon"]{
   position: relative;
-  overflow: hidden;         /* pehmeä rajaus */
-  isolation: isolate;       /* glow pysyy kortissa */
+  overflow: hidden;
+  isolation: isolate
 }
 
-/* Nosta sisältö animaation yläpuolelle */
 .widget-card[data-modal="modal-coming-soon"] > *{
   position: relative;
   z-index: 1;
 }
 
-/* Neon-taustakiilto */
 .widget-card[data-modal="modal-coming-soon"]::before{
   content: "";
   position: absolute; inset: 0;
@@ -612,15 +636,15 @@ button:hover{ filter:brightness(1.08); }
   pointer-events: none;
 }
 
-/* Pyörivä kärrynpyörä */
+/* Wheel */
 .widget-card[data-modal="modal-coming-soon"]::after{
   content: "";
   position: absolute;
   left: 50%; top: 50%;
-  width: 160px; height: 160px;             /* pyörän koko */
+  width: 120px; height: 120px;             /* Size */
   transform: translate(-50%, -50%) rotate(0deg);
   border-radius: 50%;
-  border: 3px solid var(--accent);         /* kehän korostus */
+  border: 3px solid var(--accent);
   box-shadow:
     0 0 10px rgba(57,255,20,.35),
     0 0 24px rgba(57,255,20,.25);
@@ -628,34 +652,28 @@ button:hover{ filter:brightness(1.08); }
   pointer-events: none;
   z-index: 0;
 
-  /* Pinnat + keskusta: conic + radial-taustat samassa ympyrässä */
   background:
-    /* napakappale (keskipiste) */
     radial-gradient(circle at 50% 50%,
       var(--accent) 0 6px,
       rgba(57,255,20,.25) 7px 10px,
       transparent 11px 100%),
-    /* pieni kehän sisärengas */
     radial-gradient(circle at 50% 50%,
       transparent 52%,
       rgba(57,255,20,.35) 52.5% 54%,
       transparent 55%),
-    /* pinnat: toistuva sektori */
     repeating-conic-gradient(
       from 0deg,
-      rgba(57,255,20,.95) 0deg 2deg,   /* pinnan leveys */
-      rgba(57,255,20,0) 2deg 28deg     /* väli seuraavaan */
+      rgba(57,255,20,.95) 0deg 2deg,
+      rgba(57,255,20,0) 2deg 28deg
     );
 
   animation: wheelSpin 6s linear infinite;
 }
 
-/* Hoverilla hiukan ripeämpi pyörintä */
 .widget-card[data-modal="modal-coming-soon"]:hover::after{
   animation-duration: 3.5s;
 }
 
-/* Reduced motion: pysäytä tai hidasta selvästi */
 @media (prefers-reduced-motion: reduce){
   .widget-card[data-modal="modal-coming-soon"]::after{
     animation: none;
@@ -663,7 +681,6 @@ button:hover{ filter:brightness(1.08); }
   }
 }
 
-/* Pyörimis-animaatio */
 @keyframes wheelSpin{
   to{ transform: translate(-50%, -50%) rotate(360deg); }
 }
@@ -699,7 +716,6 @@ button:hover{ filter:brightness(1.08); }
 }
 .logos-sky.hover{ filter: saturate(1.08) brightness(1.06); }
 .logos-sky::after{
-  /* pehmeä tähtipöly */
   content:"";
   position:absolute; inset:-20%;
   background:
@@ -723,7 +739,7 @@ button:hover{ filter:brightness(1.08); }
   will-change:transform;
 }
 .logos-sky.hover .logo-bubble{
-  animation-duration: calc(var(--dur) * 1.6); /* hover = hitaampi */
+  animation-duration: calc(var(--dur) * 1.6);
 }
 .logo-bubble:hover{
   box-shadow:var(--ring);
@@ -765,9 +781,59 @@ button:hover{ filter:brightness(1.08); }
   to   { filter: drop-shadow(0 0 12px rgba(57,255,20,.45)); }
 }
 
-/* Parallax: liike muuttuu muuttujien avulla */
 .logos-sky{
   transform: perspective(900px)
              rotateX(calc(var(--tiltX, 0) * 1deg))
              rotateY(calc(var(--tiltY, 0) * 1deg));
 }
+
+@media (max-width: 480px){
+  .footer{
+    padding: 10px 0;
+  }
+  .footer-inner{
+    gap: 6px;
+  }
+  .footer-contacts{
+    gap: 8px 12px;
+  }
+  .contact{
+    padding: 4px 8px;
+    font-size: .9rem;
+  }
+  .copyright{
+    font-size: .8rem;
+  }
+}
+
+/* Safe-area (iOS notch) */
+@supports (padding: max(0px)){
+  .footer{
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+}
+
+.widgets-grid{
+  width: min(1100px, 94%);
+  margin: 0 auto; 
+  justify-items: stretch;
+}
+
+@media (max-width: 600px){
+  .widgets-grid{
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+    width: 94%;
+  }
+  .widget-card{
+    margin: 0;
+  }
+}
+
+img, svg, video, canvas, iframe, embed, object{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+html, body{ overflow-x: hidden; }
