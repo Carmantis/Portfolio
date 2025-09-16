@@ -6,7 +6,8 @@ permalink: /
 
 <figure class="intro-widget">
   <div class="intro-card">
-    <img src="{{ site.baseurl }}/assets/images/profiilikuva.png" alt="Profile" class="intro-bg">
+    <img src="{{ '/assets/images/profiilikuva.png' | relative_url }}?v={{ site.time | date: '%s' }}"
+    alt="" class="intro-bg" loading="lazy" decoding="async">
     <p class="intro-text">
       I'm Heikki<br>
       Final-year AI and Data Engineering student.<br>
