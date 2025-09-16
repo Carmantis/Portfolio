@@ -6,17 +6,18 @@ permalink: /
 
 <figure class="intro-widget">
   <div class="intro-card">
-    <h2 class="intro-name">I'm Heikki</h2>
-      <p class="intro-text">
-        Final-year AI and Data Engineering student.<br>
-        Passionate about continuous learning and building real world solutions<br>
-        with data, modern AI methods, and web technologies.<br>
-        Independent and entrepreneurial<br> with strong problem solving and
-        great teamwork skills.<br>
-        Currently studying <strong>Big Data</strong>, 
-        <strong>Web Development</strong>, and 
-        <strong>Large Language Models</strong>.
-      </p>
+    <img src="{{ site.baseurl }}/assets/images/profiilikuva.png" alt="Profile" class="intro-bg">
+    <p class="intro-text">
+      I'm Heikki<br>
+      Final-year AI and Data Engineering student.<br>
+      Passionate about continuous learning and building real world solutions
+      with data,<br> modern AI methods, and web technologies.<br>
+      Independent and entrepreneurial<br> with strong problem solving and
+      great teamwork skills.<br>
+      Currently studying <strong>Big Data</strong>, 
+      <strong>Web Development</strong>, and 
+      <strong>Large Language Models</strong>.
+    </p>
   </div>
 </figure>
 
