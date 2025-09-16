@@ -86,6 +86,39 @@ img{ max-width:100%; height:auto; }
 .header-center{ justify-self:center; text-align:center; min-width:0; }
 .header-right{ justify-self:end; }
 
+/* Intro card background image */
+.intro-card {
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+
+.intro-name {
+  text-align: left;
+    max-width: 60%;
+}
+
+.intro-text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 65%;     /* ettei teksti veny kuvan päälle */
+}
+
+.intro-bg {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  width: 180px;          /* säädä kokoa */
+  height: auto;
+  opacity: 0.45;         /* läpinäkyvyys */
+  transform: translateY(-50%);
+  pointer-events: none;  /* ettei kuva häiritse klikkauksia */
+  border-radius: 50%;
+}
+
+
 /* Neon title with reliable, filter-based glow animation */
 .header-title{
   display:inline-block; /* ensures filter animates on inline text */
@@ -192,47 +225,6 @@ img{ max-width:100%; height:auto; }
   width:50px; height:auto;
   transition:transform .5s ease-in-out;
   filter:drop-shadow(0 0 10px rgba(57,255,20,0.35));
-}
-
-/* ==================================
-   Profile image (avatar)
-   ================================== */
-.profile-image{
-  width:56px; height:56px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid #0a0a0a;
-  box-shadow:           /* layered halo */
-    0 0 10px rgba(57,255,20,.45),
-    0 0 24px rgba(57,255,20,.35),
-    0 0 48px rgba(57,255,20,.25);
-  animation: neonHalo 3.2s ease-in-out infinite alternate;
-  transition: transform .2s ease, box-shadow .2s ease;
-  will-change: box-shadow, transform;
-}
-.header-right:hover .profile-image{
-  box-shadow:
-    0 0 12px rgba(57,255,20,.65),
-    0 0 28px rgba(57,255,20,.5),
-    0 0 56px rgba(57,255,20,.4);
-  transform: translateY(-1px);
-}
-@keyframes neonHalo{
-  0%{
-    box-shadow:
-      0 0 8px rgba(57,255,20,.4),
-      0 0 18px rgba(57,255,20,.3),
-      0 0 36px rgba(57,255,20,.2);
-  }
-  100%{
-    box-shadow:
-      0 0 12px rgba(57,255,20,.7),
-      0 0 28px rgba(57,255,20,.55),
-      0 0 56px rgba(57,255,20,.45);
-  }
-}
-@media (prefers-reduced-motion: reduce){
-  .profile-image{ animation:none; }
 }
 
 /* ==================================
@@ -401,7 +393,7 @@ button:hover{ filter:brightness(1.08); }
   gap:18px;
 }
 .widget-card{
-  background:linear-gradient(180deg, var(--panel), var(--panel-2));
+  background:#000000;
   border:1px solid rgba(255,255,255,0.08);
   border-radius:14px;
   padding:18px;
@@ -556,7 +548,7 @@ button:hover{ filter:brightness(1.08); }
   transform: translateY(20px);
   animation: introFadeIn 1.4s ease-out forwards;
   animation-delay: 0.3s;
-  background:linear-gradient(180deg, var(--panel), var(--panel-2));
+  background:#000000;
   border:1px solid rgba(255,255,255,0.08);
   border-radius:14px;
   padding:22px;
