@@ -103,18 +103,18 @@ img{ max-width:100%; height:auto; }
   font-size: 1rem;
   line-height: 1.6;
   color: var(--muted);
-  max-width: 65%;     /* ettei teksti veny kuvan päälle */
+  max-width: 65%;
 }
 
 .intro-bg {
   position: absolute;
   top: 50%;
   right: 5%;
-  width: 180px;          /* säädä kokoa */
+  width: 180px;
   height: auto;
-  opacity: 0.45;         /* läpinäkyvyys */
+  opacity: 0.45;
   transform: translateY(-50%);
-  pointer-events: none;  /* ettei kuva häiritse klikkauksia */
+  pointer-events: none;
   border-radius: 50%;
 }
 
@@ -433,6 +433,36 @@ button:hover{ filter:brightness(1.08); }
   filter:drop-shadow(0 0 10px rgba(57,255,20,0.45));
 }
 
+/* === Widgets: 1 → 2 → 3 (mobile-first) === */
+.widgets-grid{
+  display: grid;
+  gap: 18px;
+  width: min(1100px, 94%);
+  margin: 0 auto;
+  justify-items: stretch;
+  align-items: stretch;
+  grid-template-columns: 1fr;
+}
+
+/* tablet */
+@media (min-width: 700px){
+  .widgets-grid{
+    grid-template-columns: repeat(2, minmax(0, 1fr));   /* 2 */
+  }
+}
+
+/* desktop */
+@media (min-width: 1024px){
+  .widgets-grid{
+    grid-template-columns: repeat(3, minmax(0, 1fr));   /* 3 */
+  }
+}
+@media (min-width: 1440px){
+  .widgets-grid{ width: 1100px; }
+}
+.widget-card{ min-width: 0; }
+
+
 /* ==================================
    Modal (<dialog>)
    ================================== */
@@ -639,77 +669,7 @@ button:hover{ filter:brightness(1.08); }
   .modal-body{ max-height:65vh; }
 }
 
-/* Coming Soon: animated wagon wheel behind the card */
-.widget-card[data-modal="modal-coming-soon"]{
-  position: relative;
-  overflow: hidden;
-  isolation: isolate
-}
 
-.widget-card[data-modal="modal-coming-soon"] > *{
-  position: relative;
-  z-index: 1;
-}
-
-.widget-card[data-modal="modal-coming-soon"]::before{
-  content: "";
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(60% 80% at 50% 0%, rgba(57,255,20,.10), rgba(57,255,20,0) 60%),
-    radial-gradient(60% 80% at 50% 100%, rgba(57,255,20,.10), rgba(57,255,20,0) 60%);
-  filter: blur(2px);
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* Wheel */
-.widget-card[data-modal="modal-coming-soon"]::after{
-  content: "";
-  position: absolute;
-  left: 50%; top: 50%;
-  width: 120px; height: 120px;             /* Size */
-  transform: translate(-50%, -50%) rotate(0deg);
-  border-radius: 50%;
-  border: 3px solid var(--accent);
-  box-shadow:
-    0 0 10px rgba(57,255,20,.35),
-    0 0 24px rgba(57,255,20,.25);
-  opacity: .8;
-  pointer-events: none;
-  z-index: 0;
-
-  background:
-    radial-gradient(circle at 50% 50%,
-      var(--accent) 0 6px,
-      rgba(57,255,20,.25) 7px 10px,
-      transparent 11px 100%),
-    radial-gradient(circle at 50% 50%,
-      transparent 52%,
-      rgba(57,255,20,.35) 52.5% 54%,
-      transparent 55%),
-    repeating-conic-gradient(
-      from 0deg,
-      rgba(57,255,20,.95) 0deg 2deg,
-      rgba(57,255,20,0) 2deg 28deg
-    );
-
-  animation: wheelSpin 6s linear infinite;
-}
-
-.widget-card[data-modal="modal-coming-soon"]:hover::after{
-  animation-duration: 3.5s;
-}
-
-@media (prefers-reduced-motion: reduce){
-  .widget-card[data-modal="modal-coming-soon"]::after{
-    animation: none;
-    opacity: .6;
-  }
-}
-
-@keyframes wheelSpin{
-  to{ transform: translate(-50%, -50%) rotate(360deg); }
-}
 
 /* ========== Floating Logos ========== */
 .logos-card{
