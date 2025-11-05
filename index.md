@@ -24,7 +24,6 @@ permalink: /
 
 <div class="section-heading">
   <h2 id="projects">Projects</h2>
-  <p class="section-subtitle">What I've been working on lately</p>
 </div>
 
 <div class="widgets-grid">
@@ -58,18 +57,6 @@ permalink: /
     <p>Segmentation ➜ classification with PyTorch & torchvision.</p>
   </article>
 
-  <article class="widget-card" tabindex="0" data-modal="modal-podcast">
-    <span class="widget-chip">AUDIO</span><div class="widget-icon">🎙️</div>
-    <h3>Podcast: Career Deep Dive</h3>
-    <p>Two AI hosts debate my strengths & potential.</p>
-  </article>
-
-  <article class="widget-card" tabindex="0" data-modal="modal-career-video">
-    <span class="widget-chip">VIDEO</span><div class="widget-icon">🎥</div>
-    <h3>Video: Career video</h3>
-    <p>Short AI-generated video about changing careers.</p>
-  </article>
-
   <article class="widget-card" tabindex="0" data-modal="modal-wakatime">
     <span class="widget-chip">STATS</span><div class="widget-icon">⏱️</div>
     <h3>Wakatime Stats</h3>
@@ -80,6 +67,12 @@ permalink: /
     <span class="widget-chip">STACK</span><div class="widget-icon">🛰️</div>
     <h3>Tech Stack (Floating Logos)</h3>
     <p>Tools & frameworks I work with.</p>
+  </article>
+
+  <article class="widget-card" tabindex="0" data-modal="modal-ai-code-assistant">
+    <span class="widget-chip">AI</span><div class="widget-icon">🀄</div>
+    <h3>AI Code Assistant</h3>
+    <p>AI code assistance tool for commenting code and generating unit tests.</p>
   </article>
 
   <article class="widget-card" tabindex="0" data-modal="modal-coming-soon">
@@ -102,10 +95,9 @@ permalink: /
 <template id="tpl-dpipe">{% include widget_pipeline.html %}</template>
 <template id="tpl-ml">{% include widget_ml.html %}</template>
 <template id="tpl-image-recognition">{% include widget_deeplearn.html %}</template>
-<template id="tpl-podcast">{% include widget_podcast.html %}</template>
-<template id="tpl-career-video">{% include widget_video.html %}</template>
 <template id="tpl-wakatime">{% include widget_wakatime.html %}</template>
 <template id="tpl-logos">{% include widget_logos.html %}</template>
+<template id="tpl-ai-code-assistant">{% include widget_ai_code_assistant.html %}</template>
 <template id="tpl-coming-soon">{% include widget_webapp.html %}</template>
 
 <dialog id="app-modal" class="modal" aria-modal="true">
@@ -124,10 +116,9 @@ permalink: /
     "modal-dpipe":   { title: "Train Delay Pipeline", tpl: "tpl-dpipe" },
     "modal-ml":      { title: "LSTM Forecasting", tpl: "tpl-ml" },
     "modal-image-recognition": { title: "Image Recognition (Neural Networks)", tpl: "tpl-image-recognition" },
-    "modal-podcast": { title: "Podcast: Career Deep Dive", tpl: "tpl-podcast" },
-    "modal-career-video": { title: "Video: Career video", tpl: "tpl-career-video" },
     "modal-wakatime": { title: "Wakatime Stats", tpl: "tpl-wakatime" },
     "modal-logos": { title: "Tech Stack (Floating Logos)", tpl: "tpl-logos" },
+    "modal-ai-code-assistant": { title: "AI Code Assistant", tpl: "tpl-ai-code-assistant" },
     "modal-coming-soon": { title: "New Project", tpl: "tpl-coming-soon" },
   };
 

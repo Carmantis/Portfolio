@@ -1,0 +1,51 @@
+<h2>AI Code Assistant</h2>
+<p>
+  Python application leveraging Large Language Models for automatic code documentation 
+  and test generation. Microservice architecture: <strong>FastAPI</strong> backend, 
+  <strong>Streamlit</strong> UI, and <strong>Ollama</strong> LLM service with 
+  <strong>Qwen2.5-Coder</strong>.
+</p>
+
+<h3>Architecture</h3>
+<p>
+  Three-tier microservice setup: FastAPI backend (port 8001) receives code via REST API,
+  Streamlit UI (port 8501) provides web interface, Ollama (port 11434) runs Qwen2.5-Coder 
+  locally with GPU acceleration. Docker Compose orchestration for easy deployment.
+</p>
+
+<h3>Features</h3>
+<ul>
+  <li><strong>Documentation:</strong> Automatic docstrings and inline comments.</li>
+  <li><strong>Tests:</strong> Pytest-compatible unit tests ready to use.</li>
+  <li><strong>Prompt Engineering:</strong> Optimized prompts with JSON-enforced output.</li>
+  <li><strong>Error Handling:</strong> Robust parsing, timeouts, mock mode for testing.</li>
+</ul>
+
+<h3>Technologies</h3>
+<ul>
+  <li><strong>Backend:</strong> Python 3.11+, FastAPI, Pydantic, httpx, Uvicorn</li>
+  <li><strong>Frontend:</strong> Streamlit, custom CSS styling</li>
+  <li><strong>AI/ML:</strong> Ollama, Qwen2.5-Coder (3B/14B parameters)</li>
+  <li><strong>Infrastructure:</strong> Docker, Docker Compose, uv package manager</li>
+</ul>
+
+<h3>Workflow</h3>
+<p>
+  User inputs Python code → UI sends POST to backend → Backend constructs prompts 
+  and calls Ollama API → LLM generates documented code and tests in JSON → 
+  UI displays results in tabs with download options.
+</p>
+
+<h3>Future</h3>
+<p>
+  Multi-provider support (OpenAI, Anthropic), RAG for context-aware analysis, 
+  caching layer, batch processing for large codebases, code quality metrics.
+</p>
+
+<h3>Links</h3>
+<ul>
+  <li><a href="https://github.com/Carmantis/AI_Code_Assistant" target="_blank" rel="noopener">GitHub Repository</a></li>
+  <li><a href="https://ollama.ai/" target="_blank" rel="noopener">Ollama</a></li>
+  <li><a href="https://fastapi.tiangolo.com/" target="_blank" rel="noopener">FastAPI</a></li>
+  <li><a href="https://streamlit.io/" target="_blank" rel="noopener">Streamlit</a></li>
+</ul>
