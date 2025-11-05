@@ -1,0 +1,333 @@
+<div class="chatbot-info">
+  <strong>🤖 AI-powered Portfolio Chatbot</strong><br>
+  Ask about my skills, projects, or experiences! The app uses the RAG technique and a small language model (SLM), so its answers may not always be accurate.  Supports English only.
+  <br><small style="opacity: 0.8;">Model: SmolLM2-360M-Instruct • Loading may take a moment on first use</small>
+</div>
+
+<div class="chatbot-container">
+  <div class="chatbot-header">
+    <div class="chatbot-title">
+      💬 Portfolio Assistant
+    </div>
+    <div class="chatbot-status" id="bot-status">Ladataan...</div>
+  </div>
+
+  <div class="chatbot-messages" id="bot-messages">
+    <div class="message-bubble system">
+      👋 Hi! I am Heikki's portfolio assistant. Feel free to ask about his skills, projects, or technologies!
+    </div>
+  </div>
+
+  <div class="chatbot-input-wrapper">
+    <textarea
+      id="bot-input"
+      class="chatbot-input"
+      placeholder="Kirjoita kysymyksesi tähän..."
+      rows="1"
+      disabled
+    ></textarea>
+    <button id="bot-send" class="chatbot-send" disabled>Lähetä</button>
+  </div>
+</div>
+
+<script type="module">
+(async () => {
+  // ============================================
+  // CONFIGURATION
+  // ============================================
+  const CONFIG = {
+    vectorDataUrl: '{{ site.baseurl }}/assets/data/text_vectors.json',
+    topK: 3,
+    maxTokens: 128,
+    temperature: 0.2,
+    topP: 0.9,
+    modelName: 'HuggingFaceTB/SmolLM2-360M-Instruct',
+  };
+
+  // ============================================
+  // STATE
+  // ============================================
+  let state = {
+    vectorData: null,
+    generator: null,
+    embedder: null,
+    isReady: false,
+    isProcessing: false,
+  };
+
+  // ============================================
+  // DOM ELEMENTS
+  // ============================================
+  const elements = {
+    messages: document.getElementById('bot-messages'),
+    input: document.getElementById('bot-input'),
+    sendBtn: document.getElementById('bot-send'),
+    status: document.getElementById('bot-status'),
+  };
+
+  // ============================================
+  // UTILITY FUNCTIONS
+  // ============================================
+
+  function addMessage(text, type = 'bot') {
+    const bubble = document.createElement('div');
+    bubble.className = `message-bubble ${type}`;
+    bubble.textContent = text;
+    elements.messages.appendChild(bubble);
+    elements.messages.scrollTop = elements.messages.scrollHeight;
+  }
+
+  function showTyping() {
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message-bubble bot typing-indicator';
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = `
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    `;
+    elements.messages.appendChild(typingDiv);
+    elements.messages.scrollTop = elements.messages.scrollHeight;
+  }
+
+  function hideTyping() {
+    const typing = document.getElementById('typing-indicator');
+    if (typing) typing.remove();
+  }
+
+  function updateStatus(text, isReady = false) {
+    elements.status.textContent = text;
+    elements.status.className = `chatbot-status ${isReady ? 'ready' : 'loading'}`;
+  }
+
+  function setInputState(enabled) {
+    elements.input.disabled = !enabled;
+    elements.sendBtn.disabled = !enabled;
+    state.isProcessing = !enabled;
+  }
+
+  function autoResizeTextarea() {
+    elements.input.style.height = 'auto';
+    elements.input.style.height = Math.min(elements.input.scrollHeight, 120) + 'px';
+  }
+
+  // ============================================
+  // COSINE SIMILARITY
+  // ============================================
+
+  function cosineSimilarity(vecA, vecB) {
+    let dot = 0, magA = 0, magB = 0;
+    const len = Math.min(vecA.length, vecB.length);
+
+    for (let i = 0; i < len; i++) {
+      dot += vecA[i] * vecB[i];
+      magA += vecA[i] * vecA[i];
+      magB += vecB[i] * vecB[i];
+    }
+
+    magA = Math.sqrt(magA);
+    magB = Math.sqrt(magB);
+
+    return (magA && magB) ? dot / (magA * magB) : 0;
+  }
+
+  // ============================================
+  // RAG: RETRIEVE RELEVANT CONTEXT
+  // ============================================
+
+  async function retrieveContext(query) {
+    if (!state.vectorData || !state.embedder) return [];
+
+    try {
+      const queryEmbedding = await state.embedder(query, { pooling: 'mean', normalize: true });
+      const queryVector = Array.from(queryEmbedding.data);
+
+      const results = state.vectorData.map((item) => ({
+        text: item.text,
+        similarity: cosineSimilarity(queryVector, item.embedding),
+      }));
+
+      return results
+        .sort((a, b) => b.similarity - a.similarity)
+        .slice(0, CONFIG.topK)
+        .map(r => r.text);
+
+    } catch (error) {
+      console.error('Context retrieval error:', error);
+      return [];
+    }
+  }
+
+  // ============================================
+  // LOAD RESOURCES
+  // ============================================
+
+  async function loadVectorData() {
+    try {
+      updateStatus('Loading vector data...');
+      const response = await fetch(CONFIG.vectorDataUrl);
+
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      state.vectorData = await response.json();
+      console.log(`✅ Loaded ${state.vectorData.length} vector entries`);
+
+    } catch (error) {
+      console.error('Vector data load error:', error);
+      addMessage('❌ Error loading vector data.', 'system');
+      throw error;
+    }
+  }
+
+  async function loadModels() {
+    try {
+      updateStatus('Loading AI models...');
+
+      const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0');
+
+      updateStatus('Loading embedding model...');
+      state.embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+
+      updateStatus('Loading LLM model (this may take a minute)...');
+      state.generator = await pipeline('text-generation', CONFIG.modelName);
+
+      console.log('✅ Models loaded successfully');
+
+    } catch (error) {
+      console.error('Model load error:', error);
+      addMessage('❌ Error loading models. Please try refreshing the page.', 'system');
+      throw error;
+    }
+  }
+
+  async function initialize() {
+    try {
+      setInputState(false);
+      await loadVectorData();
+      await loadModels();
+
+      state.isReady = true;
+      updateStatus('Ready', true);
+      setInputState(true);
+      addMessage('✅ System ready! Ask me anything about Heikki.', 'system');
+      elements.input.focus();
+
+    } catch (error) {
+      console.error('Initialization error:', error);
+      updateStatus('Error', false);
+      addMessage('❌ Initialization failed. Please refresh the page.', 'system');
+    }
+  }
+
+  // ============================================
+  // CHAT LOGIC
+  // ============================================
+
+  async function handleUserMessage(userInput) {
+    if (!userInput.trim() || state.isProcessing || !state.isReady) return;
+
+    const query = userInput.trim();
+
+    addMessage(query, 'user');
+    elements.input.value = '';
+    autoResizeTextarea();
+
+    setInputState(false);
+    showTyping();
+
+    try {
+      // Retrieve relevant context
+      const contexts = await retrieveContext(query);
+      
+      // Build context string
+      let contextStr = '';
+      if (contexts.length > 0) {
+        contextStr = 'Context about Heikki:\n' + contexts.join('\n\n');
+      }
+
+      // Build messages for the model
+      const messages = [
+        {
+          role: "system",
+          content: "You are Heikki Aittokumpu's portfolio assistant. Answer questions about Heikki based on the provided context. Be concise and helpful."
+        },
+        {
+          role: "user",
+          content: contextStr ? `${contextStr}\n\nQuestion: ${query}` : query
+        }
+      ];
+
+      // Generate response
+      const output = await state.generator(messages, {
+        max_new_tokens: CONFIG.maxTokens,
+        temperature: CONFIG.temperature,
+        top_p: CONFIG.topP,
+        do_sample: true,
+      });
+
+      console.log('Generated output:', output);
+
+      // Extract response text
+      let responseText = "I couldn't generate a response.";
+
+      if (output && output[0]?.generated_text) {
+        const generatedText = output[0].generated_text;
+        
+        // If it's an array of messages, get the last assistant message
+        if (Array.isArray(generatedText)) {
+          const lastMessage = generatedText[generatedText.length - 1];
+          if (lastMessage?.content) {
+            responseText = lastMessage.content;
+          }
+        } 
+        // If it's a string, use it directly
+        else if (typeof generatedText === 'string') {
+          responseText = generatedText;
+        }
+      }
+
+      // Clean and limit response
+      responseText = responseText.trim();
+      if (responseText.length > 400) {
+        responseText = responseText.substring(0, 400) + '...';
+      }
+
+      hideTyping();
+      addMessage(responseText, 'bot');
+
+    } catch (error) {
+      hideTyping();
+      console.error('Chat error:', error);
+      addMessage('❌ Error generating response. Please try again.', 'system');
+    } finally {
+      setInputState(true);
+      elements.input.focus();
+    }
+  }
+
+  // ============================================
+  // EVENT LISTENERS
+  // ============================================
+
+  elements.sendBtn.addEventListener('click', () => {
+    handleUserMessage(elements.input.value);
+  });
+
+  elements.input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleUserMessage(elements.input.value);
+    }
+  });
+
+  elements.input.addEventListener('input', autoResizeTextarea);
+
+  // ============================================
+  // INITIALIZATION
+  // ============================================
+
+  console.log('🤖 Portfolio Chatbot initializing...');
+  await initialize();
+
+})();
+</script>

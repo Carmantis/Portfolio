@@ -75,6 +75,12 @@ permalink: /
     <p>AI code assistance tool for commenting code and generating unit tests.</p>
   </article>
 
+  <article class="widget-card" tabindex="0" data-modal="modal-chatbot">
+    <span class="widget-chip">AI CHAT</span><div class="widget-icon">💬</div>
+    <h3>Portfolio Chatbot</h3>
+    <p>RAG-powered AI assistant · SmolLM2-135M · Transformers.js</p>
+  </article>
+
   <article class="widget-card" tabindex="0" data-modal="modal-coming-soon">
     <span class="widget-chip">COMING SOON</span><div class="widget-icon">⏳</div>
     <h3>New Project</h3>
@@ -98,6 +104,7 @@ permalink: /
 <template id="tpl-wakatime">{% include widget_wakatime.html %}</template>
 <template id="tpl-logos">{% include widget_logos.html %}</template>
 <template id="tpl-ai-code-assistant">{% include widget_ai_code_assistant.html %}</template>
+<template id="tpl-chatbot">{% include widget_chatbot.html %}</template>
 <template id="tpl-coming-soon">{% include widget_webapp.html %}</template>
 
 <dialog id="app-modal" class="modal" aria-modal="true">
@@ -119,6 +126,7 @@ permalink: /
     "modal-wakatime": { title: "Wakatime Stats", tpl: "tpl-wakatime" },
     "modal-logos": { title: "Tech Stack (Floating Logos)", tpl: "tpl-logos" },
     "modal-ai-code-assistant": { title: "AI Code Assistant", tpl: "tpl-ai-code-assistant" },
+    "modal-chatbot": { title: "Portfolio Chatbot (AI)", tpl: "tpl-chatbot" },
     "modal-coming-soon": { title: "New Project", tpl: "tpl-coming-soon" },
   };
 
