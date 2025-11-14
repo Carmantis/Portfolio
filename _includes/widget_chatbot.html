@@ -1,7 +1,7 @@
 <div class="chatbot-info">
   <strong>AI-powered Portfolio Chatbot</strong><br>
-  Ask about my skills, projects, or experiences! The app uses the RAG technique and a small language model (SLM), so its answers may not always be accurate.  Supports English only.
-  <br><small style="opacity: 0.8;">Model: SmolLM2-360M-Instruct • Loading may take a moment on first use</small>
+  Ask about my skills, projects, or experiences! The app uses RAG (Retrieval-Augmented Generation) with Gemini AI to provide accurate answers based on portfolio content.
+  <br><small style="opacity: 0.8;">Powered by Gemini API • Semantic search with local embeddings</small>
 </div>
 
 <div class="chatbot-container">
@@ -37,11 +37,9 @@
   // ============================================
   const CONFIG = {
     vectorDataUrl: '{{ site.baseurl }}/assets/data/text_vectors.json',
-    topK: 3,
-    maxTokens: 128,
-    temperature: 0.2,
-    topP: 0.9,
-    modelName: 'HuggingFaceTB/SmolLM2-360M-Instruct',
+    apiEndpoint: 'https://portfolio-chatbot.aittokumpuh.workers.dev/',
+    topK: 5,
+    maxTokens: 512, // Nostettu jotta vastaukset eivät katkea
   };
 
   // ============================================
@@ -49,7 +47,6 @@
   // ============================================
   let state = {
     vectorData: null,
-    generator: null,
     embedder: null,
     isReady: false,
     isProcessing: false,
@@ -179,23 +176,19 @@
     }
   }
 
-  async function loadModels() {
+  async function loadEmbeddingModel() {
     try {
-      updateStatus('Loading AI models...');
+      updateStatus('Loading embedding model...');
 
       const { pipeline } = await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0');
 
-      updateStatus('Loading embedding model...');
       state.embedder = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 
-      updateStatus('Loading LLM model (this may take a minute)...');
-      state.generator = await pipeline('text-generation', CONFIG.modelName);
-
-      console.log('✅ Models loaded successfully');
+      console.log('✅ Embedding model loaded successfully');
 
     } catch (error) {
       console.error('Model load error:', error);
-      addMessage('❌ Error loading models. Please try refreshing the page.', 'system');
+      addMessage('❌ Error loading embedding model. Please try refreshing the page.', 'system');
       throw error;
     }
   }
@@ -204,7 +197,7 @@
     try {
       setInputState(false);
       await loadVectorData();
-      await loadModels();
+      await loadEmbeddingModel();
 
       state.isReady = true;
       updateStatus('Ready', true);
@@ -236,61 +229,53 @@
     showTyping();
 
     try {
-      // Retrieve relevant context
+      // Retrieve relevant context using RAG
       const contexts = await retrieveContext(query);
-      
+
       // Build context string
       let contextStr = '';
       if (contexts.length > 0) {
         contextStr = 'Context about Heikki:\n' + contexts.join('\n\n');
       }
 
-      // Build messages for the model
+      // Build messages for the API
       const messages = [
         {
           role: "system",
-          content: "You are Heikki Aittokumpu's portfolio assistant. Answer questions about Heikki based on the provided context. Be concise and helpful. Do not dream up answers if the information is not available, just say you don't have that information and recommend asking Heikki directly."
+          content: `You are Heikki Aittokumpu's portfolio assistant. Follow these rules strictly:
+
+1. ONLY answer based on the context provided below
+2. If the answer is not in the context, say "I don't have that information in my knowledge base. Please contact Heikki directly at [aittokumpuh@gmail.com]"
+3. Do NOT make up, infer, or assume information beyond what's explicitly stated
+4. Be concise but complete - don't cut answers short
+5. Answer in the same language as the question (English or Finnish)`
         },
         {
           role: "user",
-          content: contextStr ? `${contextStr}\n\nQuestion: ${query}` : query
+          content: contextStr ? `Context:\n${contextStr}\n\nQuestion: ${query}` : `No specific context available.\n\nQuestion: ${query}`
         }
       ];
 
-      // Generate response
-      const output = await state.generator(messages, {
-        max_new_tokens: CONFIG.maxTokens,
-        temperature: CONFIG.temperature,
-        top_p: CONFIG.topP,
-        do_sample: true,
+      // Call API through Cloudflare Worker proxy
+      const apiResponse = await fetch(CONFIG.apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: messages,
+          maxTokens: CONFIG.maxTokens,
+        })
       });
 
-      console.log('Generated output:', output);
-
-      // Extract response text
-      let responseText = "I couldn't generate a response.";
-
-      if (output && output[0]?.generated_text) {
-        const generatedText = output[0].generated_text;
-        
-        // If it's an array of messages, get the last assistant message
-        if (Array.isArray(generatedText)) {
-          const lastMessage = generatedText[generatedText.length - 1];
-          if (lastMessage?.content) {
-            responseText = lastMessage.content;
-          }
-        } 
-        // If it's a string, use it directly
-        else if (typeof generatedText === 'string') {
-          responseText = generatedText;
-        }
+      if (!apiResponse.ok) {
+        throw new Error(`API request failed: ${apiResponse.status}`);
       }
 
-      // Clean and limit response
+      const data = await apiResponse.json();
+
+      let responseText = data.response || "I couldn't generate a response.";
       responseText = responseText.trim();
-      if (responseText.length > 400) {
-        responseText = responseText.substring(0, 400) + '...';
-      }
 
       hideTyping();
       addMessage(responseText, 'bot');
@@ -298,7 +283,17 @@
     } catch (error) {
       hideTyping();
       console.error('Chat error:', error);
-      addMessage('❌ Error generating response. Please try again.', 'system');
+
+      let errorMsg = '❌ Error generating response. ';
+      if (error.message.includes('Failed to fetch')) {
+        errorMsg += 'Could not connect to API. Check your internet connection.';
+      } else if (error.message.includes('API request failed')) {
+        errorMsg += 'API service error. Please try again later.';
+      } else {
+        errorMsg += 'Please try again.';
+      }
+
+      addMessage(errorMsg, 'system');
     } finally {
       setInputState(true);
       elements.input.focus();
