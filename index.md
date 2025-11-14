@@ -78,7 +78,7 @@ permalink: /
   <article class="widget-card" tabindex="0" data-modal="modal-chatbot">
     <span class="widget-chip">AI CHAT</span><div class="widget-icon">💬</div>
     <h3>Portfolio Chatbot</h3>
-    <p>RAG-powered AI assistant · SmolLM2-135M · Transformers.js</p>
+    <p>RAG-powered AI assistant · Gemini API</p>
   </article>
 
   <article class="widget-card" tabindex="0" data-modal="modal-coming-soon">
