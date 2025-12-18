@@ -630,11 +630,22 @@ button:hover{ filter:brightness(1.08); }
 /* Centered section headings */
 .section-heading{ text-align:center; margin:40px 0 30px; }
 .section-heading h2{
+  display: inline-block;
   font-family:inherit;
   font-size:2rem;
   font-weight:800;
   margin:0 0 10px;
-  color:#faf8f8;
+  color:var(--accent);
+  will-change:filter;
+  text-shadow:
+    0 0 6px rgba(57,255,20,.65),
+    0 0 14px rgba(57,255,20,.45),
+    0 0 28px rgba(57,255,20,.35);
+  filter:
+    drop-shadow(0 0 5px  rgba(57,255,20,.55))
+    drop-shadow(0 0 12px rgba(57,255,20,.38))
+    drop-shadow(0 0 24px rgba(57,255,20,.28));
+  animation: neonPulseTitle 3.2s ease-in-out infinite alternate;
 }
 .section-subtitle{
   font-size:1.2rem;
