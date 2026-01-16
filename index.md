@@ -49,7 +49,7 @@ permalink: /
   { "modal": "modal-logos", "chip": "STACK", "icon": "🛰️", "title": "Tech Stack (Floating Logos)", "desc": "Tools & frameworks I work with." },
   { "modal": "modal-ai-code-assistant", "chip": "AI", "icon": "🀄", "title": "AI Code Assistant", "desc": "AI code assistance tool for commenting code and generating unit tests." },
   { "modal": "modal-chatbot", "chip": "AI CHAT", "icon": "💬", "title": "Portfolio Chatbot", "desc": "RAG-powered AI assistant · Gemini API" },
-  { "modal": "modal-aichatbot", "chip": "RAG", "icon": "🎓", "title": "AI-KAI: RAG Chatbot", "desc": "Microservices · ChromaDB · FastAPI · Docker." },
+  { "modal": "modal-aichatbot", "chip": "RAG", "icon": "🎓", "title": "RAG Chatbot", "desc": "Microservices · ChromaDB · FastAPI · Docker." },
   { "modal": "modal-coming-soon", "chip": "COMING SOON", "icon": "⏳", "title": "New Project", "desc": "Details about the upcoming project will be available soon." }
 ]
 </script>
